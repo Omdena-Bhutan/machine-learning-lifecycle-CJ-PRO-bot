@@ -1,0 +1,14 @@
+# WHY: Never commit virtual environments
+.venv/
+venv/
+
+# WHY: Python cache / OS junk
+__pycache__/
+*.pyc
+.DS_Store
+
+# WHY: Local MLflow runs (optional for grading, but usually not committed)
+mlruns/
+
+# WHY: HuggingFace cache (optional; avoids huge local caches)
+.cache/

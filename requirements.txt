@@ -1,0 +1,5 @@
+# Data handling
+pandas>=1.5
+
+# Dataset ingestion
+datasets>=2.14
