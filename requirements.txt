@@ -3,3 +3,8 @@ pandas>=1.5
 
 # Dataset ingestion
 datasets>=2.14
+
+# -----------------------------
+# Data version control
+# -----------------------------
+dvc>=3.0,<4.0
