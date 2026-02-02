@@ -170,7 +170,18 @@ mlflow ui
 # Compare runs
 mlflow experiments compare --experiment-ids 1 2 3
 ```
+### How to run
 
+```bash
+### Reproduce pipeline
+dvc repro
+
+### Train baseline models
+Open notebooks/02_model_development.ipynb and run all cells.
+
+### Evaluate
+Open notebooks/03_results_analysis.ipynb and run all cells.
+```
 ### Step 5: Test and Validate
 
 ```bash
