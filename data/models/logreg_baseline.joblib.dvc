@@ -1,0 +1,5 @@
+outs:
+- md5: af36ff6737e92879155a5028943090db
+  size: 400863
+  hash: md5
+  path: logreg_baseline.joblib
