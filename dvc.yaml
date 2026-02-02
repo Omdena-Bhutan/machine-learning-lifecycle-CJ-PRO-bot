@@ -1,0 +1,9 @@
+stages:
+  prepare:
+    cmd: python src/data_loader.py
+    deps:
+      - src/data_loader.py
+      - data/raw/reviews.csv
+    outs:
+      - data/processed/train.pkl
+      - data/processed/test.pkl

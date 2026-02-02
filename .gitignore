@@ -1,0 +1,10 @@
+# WHY: never commit virtual environments
+.venv/
+venv/
+
+# WHY: Python cache
+__pycache__/
+*.pyc
+
+# WHY: MLflow local artifacts (keep repo clean)
+mlruns/
