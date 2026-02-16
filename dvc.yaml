@@ -25,7 +25,8 @@ stages:
       - train.train_subset
       - train.eval_subset
     outs:
-      - models/trained
+      - models/trained:
+          cache: false
     metrics:
       - metrics.json:
           cache: false

@@ -52,11 +52,11 @@ stages:
     outs:
     - path: metrics.json
       hash: md5
-      md5: 659b823d220ccf4e85051d9de0147d8d
-      size: 266
+      md5: 2a8bc5b063c690012609b75e5a9a09d7
+      size: 267
     - path: models/trained
       hash: md5
-      md5: d32491c2b006e5de7fcc7c0aeb130151.dir
+      md5: 9aeac01700720ebaed41b30a87bb5113.dir
       size: 268544983
       nfiles: 4
   evaluate:
@@ -68,7 +68,7 @@ stages:
       size: 325847595
     - path: models/trained
       hash: md5
-      md5: d32491c2b006e5de7fcc7c0aeb130151.dir
+      md5: 9aeac01700720ebaed41b30a87bb5113.dir
       size: 268544983
       nfiles: 4
     - path: params.yaml
@@ -86,5 +86,5 @@ stages:
     outs:
     - path: eval_metrics.json
       hash: md5
-      md5: 0e1f295d88640d4d3658fd61095d8c75
+      md5: cc45ae3bf9fa072ea6162b0acd1b936f
       size: 179

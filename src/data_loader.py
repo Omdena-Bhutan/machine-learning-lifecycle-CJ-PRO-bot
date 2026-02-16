@@ -1,87 +1,78 @@
 # src/data_loader.py
+import os
+import pickle
+from dataclasses import dataclass
 
-# WHY: This is the DVC "prepare" stage.
-# WHY: It converts raw data into deterministic, training-ready datasets.
-# WHAT: Reads raw IMDB CSV (with split column) -> saves train.pkl and test.pkl.
-
-from __future__ import annotations
-
-from pathlib import Path
 import pandas as pd
+from transformers import AutoTokenizer
 
 
-RAW_PATH = Path("data/raw/reviews.csv")
-OUT_DIR = Path("data/processed")
+@dataclass
+class PreprocessConfig:
+    data_path: str = "data/raw/reviews.csv"
+    model_name: str = "distilbert-base-uncased"
+    max_length: int = 128
+    train_out: str = "data/processed/train.pkl"
+    test_out: str = "data/processed/test.pkl"
 
-REQUIRED_COLS = {"text", "label", "split"}
 
+class DataPreprocessor:
+    def __init__(self, config: PreprocessConfig):
+        self.cfg = config
+        self.tokenizer = AutoTokenizer.from_pretrained(self.cfg.model_name)
 
-def _validate_schema(df: pd.DataFrame) -> None:
-    # WHY: Early, clear failure prevents silent pipeline bugs later.
-    missing = REQUIRED_COLS - set(df.columns)
-    if missing:
-        raise ValueError(
-            f"Missing required columns: {sorted(missing)}. "
-            f"Found columns: {list(df.columns)}"
+    def load_data(self) -> pd.DataFrame:
+        df = pd.read_csv(self.cfg.data_path)
+        required = {"text", "label", "split"}
+        missing = required - set(df.columns)
+        if missing:
+            raise ValueError(f"Missing required columns: {missing}")
+        return df
+
+    def split_data(self, df: pd.DataFrame):
+        train_df = df[df["split"] == "train"].copy()
+        test_df = df[df["split"] == "test"].copy()
+
+        if len(train_df) == 0 or len(test_df) == 0:
+            raise ValueError("Train/Test split resulted in empty set. Check 'split' column values.")
+
+        return train_df, test_df
+
+    def tokenize_texts(self, texts):
+        # HuggingFace tokenizer returns dict with input_ids, attention_mask, etc.
+        enc = self.tokenizer(
+            list(texts),
+            truncation=True,
+            padding=True,
+            max_length=self.cfg.max_length,
         )
+        return enc
 
-    # Validate split values
-    splits = set(df["split"].unique())
-    if not {"train", "test"}.issubset(splits):
-        raise ValueError(f"Expected split to contain 'train' and 'test'. Got: {sorted(splits)}")
+    def build_dataset_dict(self, df: pd.DataFrame):
+        enc = self.tokenize_texts(df["text"].astype(str).tolist())
+        labels = df["label"].astype(int).tolist()
+        enc["labels"] = labels
+        return enc
 
+    def save_pickle(self, obj, path: str):
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "wb") as f:
+            pickle.dump(obj, f)
 
-def _clean_text(series: pd.Series) -> pd.Series:
-    # WHY: Keep cleaning minimal for transformer models (don't destroy semantics).
-    # WHAT: Normalize whitespace + remove newlines.
-    return (
-        series.astype(str)
-        .str.replace("\r", " ", regex=False)
-        .str.replace("\n", " ", regex=False)
-        .str.strip()
-    )
+    def run(self):
+        df = self.load_data()
+        train_df, test_df = self.split_data(df)
 
+        train_data = self.build_dataset_dict(train_df)
+        test_data = self.build_dataset_dict(test_df)
 
-def main() -> None:
-    # WHAT: Create output folder if missing
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
+        self.save_pickle(train_data, self.cfg.train_out)
+        self.save_pickle(test_data, self.cfg.test_out)
 
-    # WHY: Fail fast if raw data is missing (common CI/CD failure).
-    if not RAW_PATH.exists():
-        raise FileNotFoundError(
-            f"Raw dataset not found at {RAW_PATH}. "
-            f"Run: python src/download_data.py"
-        )
-
-    # WHAT: Load raw data
-    df = pd.read_csv(RAW_PATH)
-    _validate_schema(df)
-
-    # WHAT: Basic cleaning + label type normalization
-    df["text"] = _clean_text(df["text"])
-
-    # WHY: Ensure labels are integers (0/1) for training code later.
-    df["label"] = df["label"].astype(int)
-
-    # WHAT: Deterministic split using existing 'split' column
-    train_df = df[df["split"] == "train"][["text", "label"]].reset_index(drop=True)
-    test_df = df[df["split"] == "test"][["text", "label"]].reset_index(drop=True)
-
-    # WHY: Sanity checks catch leakage/format issues early.
-    if len(train_df) == 0 or len(test_df) == 0:
-        raise ValueError(f"Train or test split is empty. train={len(train_df)} test={len(test_df)}")
-
-    # WHAT: Save processed artifacts
-    train_path = OUT_DIR / "train.pkl"
-    test_path = OUT_DIR / "test.pkl"
-    train_df.to_pickle(train_path)
-    test_df.to_pickle(test_path)
-
-    print("✅ Prepare stage complete")
-    print(f"Saved: {train_path} ({len(train_df)} rows)")
-    print(f"Saved: {test_path} ({len(test_df)} rows)")
-    print("Columns:", list(train_df.columns))
+        print(f"[OK] Saved: {self.cfg.train_out} ({len(train_df)} samples)")
+        print(f"[OK] Saved: {self.cfg.test_out} ({len(test_df)} samples)")
 
 
 if __name__ == "__main__":
-    main()
+    cfg = PreprocessConfig()
+    DataPreprocessor(cfg).run()
