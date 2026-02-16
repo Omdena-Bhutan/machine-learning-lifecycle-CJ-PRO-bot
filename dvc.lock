@@ -77,13 +77,21 @@ stages:
       size: 196
     - path: src/evaluate.py
       hash: md5
-      md5: bb92d618fcc7c7eeb9d6799f4c1daf12
-      size: 2234
+      md5: e18ea2713fbe8a084d5324722e66572f
+      size: 3609
     params:
       params.yaml:
         train.eval_subset: 1000
         train.seed: 42
     outs:
+    - path: confusion_matrix.csv
+      hash: md5
+      md5: f3c11fa670cff21b614617c3ad20ad03
+      size: 48
+    - path: confusion_matrix.json
+      hash: md5
+      md5: a48096a1318e8cc574483f236bd9bb68
+      size: 58
     - path: eval_metrics.json
       hash: md5
       md5: f3b80f12dddc4abeb306021c7fb2e37f
