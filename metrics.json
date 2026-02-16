@@ -1,1 +1,1 @@
-{"eval_loss": 0.39653417468070984, "eval_accuracy": 0.825, "eval_f1": 0.8338081671415005, "eval_precision": 0.7769911504424779, "eval_recall": 0.8995901639344263, "eval_runtime": 41.1692, "eval_samples_per_second": 24.29, "eval_steps_per_second": 3.036, "epoch": 1.0}
+{"eval_loss": 0.3902571499347687, "eval_accuracy": 0.823, "eval_f1": 0.8312678741658722, "eval_precision": 0.7771836007130125, "eval_recall": 0.8934426229508197, "eval_runtime": 40.6603, "eval_samples_per_second": 24.594, "eval_steps_per_second": 3.074, "epoch": 1.0}
