@@ -2,7 +2,7 @@ train:
   model_name: distilbert-base-uncased
   batch_size: 8
   epochs: 1
-  learning_rate: 3e-5
+  learning_rate: 2e-5
   weight_decay: 0.01
   seed: 42
   train_subset: 3000

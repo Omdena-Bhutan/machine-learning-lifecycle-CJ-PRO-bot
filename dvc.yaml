@@ -2,8 +2,44 @@ stages:
   prepare:
     cmd: python src/data_loader.py
     deps:
-      - src/data_loader.py
       - data/raw/reviews.csv
+      - src/data_loader.py
     outs:
       - data/processed/train.pkl
       - data/processed/test.pkl
+
+  train:
+    cmd: python src/model.py
+    deps:
+      - src/model.py
+      - data/processed/train.pkl
+      - data/processed/test.pkl
+      - params.yaml
+    params:
+      - train.model_name
+      - train.batch_size
+      - train.epochs
+      - train.learning_rate
+      - train.weight_decay
+      - train.seed
+      - train.train_subset
+      - train.eval_subset
+    outs:
+      - models/trained
+    metrics:
+      - metrics.json:
+          cache: false
+
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+      - src/evaluate.py
+      - data/processed/test.pkl
+      - models/trained
+      - params.yaml
+    params:
+      - train.seed
+      - train.eval_subset
+    metrics:
+      - eval_metrics.json:
+          cache: false

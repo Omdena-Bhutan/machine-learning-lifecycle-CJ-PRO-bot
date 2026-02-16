@@ -33,7 +33,7 @@ stages:
       size: 331745903
     - path: params.yaml
       hash: md5
-      md5: 4404de8aefae37d78f87be1f8256f174
+      md5: ee16172b298551fadf55471a550b704e
       size: 196
     - path: src/model.py
       hash: md5
@@ -44,7 +44,7 @@ stages:
         train.batch_size: 8
         train.epochs: 1
         train.eval_subset: 1000
-        train.learning_rate: 3e-05
+        train.learning_rate: 2e-05
         train.model_name: distilbert-base-uncased
         train.seed: 42
         train.train_subset: 3000
@@ -52,11 +52,11 @@ stages:
     outs:
     - path: metrics.json
       hash: md5
-      md5: cd1aec39d440a6cdcbedd15bf5ddd6c9
-      size: 267
+      md5: 659b823d220ccf4e85051d9de0147d8d
+      size: 266
     - path: models/trained
       hash: md5
-      md5: a1f015a6489f530d390e0815a46b5975.dir
+      md5: d32491c2b006e5de7fcc7c0aeb130151.dir
       size: 268544983
       nfiles: 4
   evaluate:
@@ -68,12 +68,12 @@ stages:
       size: 325847595
     - path: models/trained
       hash: md5
-      md5: a1f015a6489f530d390e0815a46b5975.dir
+      md5: d32491c2b006e5de7fcc7c0aeb130151.dir
       size: 268544983
       nfiles: 4
     - path: params.yaml
       hash: md5
-      md5: 4404de8aefae37d78f87be1f8256f174
+      md5: ee16172b298551fadf55471a550b704e
       size: 196
     - path: src/evaluate.py
       hash: md5
@@ -86,5 +86,5 @@ stages:
     outs:
     - path: eval_metrics.json
       hash: md5
-      md5: 31e81bd63d2ac4f55195208266a3eb02
+      md5: 0e1f295d88640d4d3658fd61095d8c75
       size: 179
