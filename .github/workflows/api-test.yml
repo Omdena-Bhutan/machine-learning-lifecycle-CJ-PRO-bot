@@ -2,7 +2,7 @@ name: Test API Docker Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, feature-model-training ]
   pull_request:
     branches: [ main ]
 
