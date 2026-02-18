@@ -7,4 +7,7 @@ __pycache__/
 *.pyc
 
 # WHY: MLflow local artifacts (keep repo clean)
+mlflow.db
 mlruns/
+*.db
+

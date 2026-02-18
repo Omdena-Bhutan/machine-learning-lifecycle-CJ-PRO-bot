@@ -44,3 +44,8 @@ stages:
     metrics:
       - eval_metrics.json:
           cache: false
+      - confusion_matrix.json:
+          cache: false
+    outs:
+      - confusion_matrix.csv:
+          cache: false
