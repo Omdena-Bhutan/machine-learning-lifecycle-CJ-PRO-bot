@@ -20,14 +20,31 @@ jobs:
       - name: Run container
         run: docker run -d -p 5000:5000 --name test-container sentiment-api
 
-      - name: Wait for container
-        run: sleep 10
+      - name: Show container status
+        run: |
+          docker ps -a
+          docker inspect test-container --format='{{.State.Status}} {{.State.ExitCode}}'
 
-      - name: Test health endpoint
-        run: curl http://localhost:5000/health
+      - name: Print container logs
+        run: docker logs test-container || true
+
+      - name: Wait for API to be ready (health)
+        run: |
+          for i in {1..30}; do
+            if curl -f http://localhost:5000/health; then
+              echo "API is up!"
+              exit 0
+            fi
+            echo "Waiting for API... ($i)"
+            sleep 2
+          done
+          echo "API did not start in time"
+          docker ps -a
+          docker logs test-container
+          exit 1
 
       - name: Test predict endpoint
         run: |
-          curl -X POST http://localhost:5000/predict \
+          curl -f -X POST http://localhost:5000/predict \
           -H "Content-Type: application/json" \
           -d '{"text":"This movie was amazing"}'
