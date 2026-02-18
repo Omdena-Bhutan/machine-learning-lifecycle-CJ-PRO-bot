@@ -12,7 +12,7 @@ RUN pip install -r requirements.txt
 COPY app/ .
 
 # Copy your saved baseline models
-COPY data/models/ ./models/
+COPY app/models/ ./models/
 
 EXPOSE 5000
 CMD ["gunicorn", "-b", "0.0.0.0:5000", "api:app"]
