@@ -1,0 +1,33 @@
+name: Test API Docker Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-docker-api:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -f app/Dockerfile -t sentiment-api .
+
+      - name: Run container
+        run: docker run -d -p 5000:5000 --name test-container sentiment-api
+
+      - name: Wait for container
+        run: sleep 10
+
+      - name: Test health endpoint
+        run: curl http://localhost:5000/health
+
+      - name: Test predict endpoint
+        run: |
+          curl -X POST http://localhost:5000/predict \
+          -H "Content-Type: application/json" \
+          -d '{"text":"This movie was amazing"}'
