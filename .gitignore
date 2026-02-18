@@ -11,3 +11,5 @@ mlflow.db
 mlruns/
 *.db
 
+models/metadata.json
+
