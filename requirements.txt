@@ -6,26 +6,28 @@ pandas>=2.0.0
 numpy>=1.23.0
 gunicorn==21.2.0
 
-# Visualization (EDA)
+# Visualization
 matplotlib>=3.7.0
 seaborn>=0.12.0
 
 # Machine Learning
 scikit-learn>=1.3.0
 joblib>=1.3.0
-
-# DVC (data versioning & pipeline)
-dvc>=3.0.0
-dvc-gdrive>=3.0.0
-# OR dvc[s3], dvc[azure], etc. depending on remote (your sir likely set this)
-
-# Jupyter / notebooks
-jupyterlab>=4.0.0
-ipykernel>=6.25.0
-
 transformers>=4.40.0
 torch>=2.0.0
 accelerate>=0.28.0
+
+# Experiment tracking
 mlflow>=2.10.0
 pyyaml>=6.0.1
-scikit-learn>=1.3.0
+
+# DVC
+dvc>=3.0.0
+dvc-gdrive>=3.0.0
+
+# Notebooks
+jupyterlab>=4.0.0
+ipykernel>=6.25.0
+
+# Testing
+pytest>=8.0.0

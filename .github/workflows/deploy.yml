@@ -1,0 +1,30 @@
+name: Build & Publish Docker Image (GHCR)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image
+        run: docker build -f app/Dockerfile -t ghcr.io/${{ github.repository_owner }}/sentiment-api:latest .
+
+      - name: Push image
+        run: docker push ghcr.io/${{ github.repository_owner }}/sentiment-api:latest
