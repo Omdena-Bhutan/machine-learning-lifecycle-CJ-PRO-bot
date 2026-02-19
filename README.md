@@ -1,45 +1,113 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/EKl6m7lv)
 
-# ML Lifecycle & MLOps Assignment — Sentiment Analysis (DVC + MLflow + Docker + CI)
+ML Lifecycle & MLOps Assignment — Sentiment Analysis
+(DVC + MLflow + Docker + GitHub Actions)
 
-This repository demonstrates an end-to-end ML lifecycle for sentiment analysis:
+This repository demonstrates a complete end-to-end ML lifecycle for sentiment analysis using modern MLOps practices.
 
-- **DVC pipeline**: `prepare → train → evaluate`
-- **Transfer learning (DistilBERT)** training + **MLflow experiment tracking**
-- **Lightweight production API** using **TF-IDF + Logistic Regression** (fast for Docker/CI)
-- **Dockerized API** + **GitHub Actions CI**
-- Optional: **GHCR deploy workflow** (cloud-deployable without external cloud credentials)
+Included Features:
+- DVC pipeline (prepare → train → evaluate)
+- Transfer learning with DistilBERT
+- MLflow experiment tracking
+- Lightweight production API (TF-IDF + Logistic Regression)
+- Dockerized API (Gunicorn)
+- GitHub Actions CI workflows
+- GHCR container publishing (cloud-deployable without external credentials)
 
----
+============================================================
+ML Pipeline (DVC)
+============================================================
 
-## ✅ What’s Implemented
+Pipeline Stages:
+- prepare → creates data/processed/train.pkl and test.pkl
+- train → fine-tunes DistilBERT and logs metrics to MLflow
+- evaluate → generates evaluation metrics + confusion matrix
 
-### ML Pipeline (DVC)
-Stages:
-- `prepare`: creates `data/processed/train.pkl` and `data/processed/test.pkl`
-- `train`: fine-tunes DistilBERT, logs metrics to MLflow, saves artifacts to `models/trained/`
-- `evaluate`: writes evaluation metrics + confusion matrix artifacts
+Run the pipeline:
 
-Commands:
-```bash
 dvc dag
 dvc repro
 
----
+If nothing changed:
+Data and pipelines are up to date.
+
+============================================================
+Experiment Tracking (MLflow)
+============================================================
+
+Training logs:
+- model_name
+- learning_rate
+- batch_size
+- epochs
+- accuracy
+- f1
+- precision
+- recall
+
+Launch MLflow UI:
+
+mlflow ui
+
+Open in browser:
+http://127.0.0.1:5000
+
+============================================================
+Run API Locally (Docker)
+============================================================
+
+Build from project root:
+
+docker build -f app/Dockerfile -t sentiment-api .
+docker run -p 5000:5000 sentiment-api
+
+Test endpoints:
+
+curl http://localhost:5000/health
+
+curl -X POST http://localhost:5000/predict   -H "Content-Type: application/json"   -d "{\"text\":\"This movie was amazing\"}"
+
+============================================================
+GitHub Actions Workflows
+============================================================
+
+api-test.yml
+- Builds Docker image
+- Runs container
+- Waits for /health
+- Tests /predict
+
+ml-smoke-test.yml
+- Loads baseline joblib artifacts
+- Runs test inference
+
+test.yml
+- Runs: pytest -q
+
+train.yml
+- Reproduces DVC pipeline
+
+deploy.yml
+- Builds and publishes Docker image to GHCR
+- Uses built-in GITHUB_TOKEN
+
+============================================================
 Project Structure
+============================================================
+
+.
 ├── app/
 │   ├── api.py
 │   ├── Dockerfile
 │   ├── requirements.txt
-│   └── models/                      # baseline artifacts for serving (joblib)
+│   └── models/
 ├── data/
-│   ├── raw/                         # dataset (DVC tracked)
-│   └── processed/                   # train.pkl / test.pkl
+│   ├── raw/
+│   └── processed/
 ├── models/
-│   └── trained/                     # transformer artifacts (model.safetensors, tokenizer, config)
+│   └── trained/
 ├── src/
 │   ├── data_loader.py
-│   ├── model.py                     # transformer training + MLflow logging
+│   ├── model.py
 │   ├── evaluate.py
 │   └── inference.py
 ├── dvc.yaml
@@ -52,4 +120,20 @@ Project Structure
     ├── test.yml
     ├── train.yml
     └── deploy.yml
----
+
+============================================================
+Assignment Requirements Covered
+============================================================
+
+✔ DVC data versioning
+✔ Transformer fine-tuning (DistilBERT)
+✔ MLflow experiment tracking
+✔ Evaluation metrics + confusion matrix
+✔ Flask API with /health and /predict
+✔ Docker containerization
+✔ GitHub Actions CI
+✔ Cloud-deployable container (GHCR)
+
+Final Status:
+The pipeline is reproducible, CI passes, Docker builds successfully, and experiments are tracked in MLflow.
+
