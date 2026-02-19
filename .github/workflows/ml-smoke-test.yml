@@ -1,0 +1,45 @@
+name: ML Smoke Test
+
+on:
+  push:
+    branches: [ main, feature-model-training ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Test model loading
+        run: |
+          python -c "
+import joblib
+model = joblib.load('app/models/logreg_baseline.joblib')
+vectorizer = joblib.load('app/models/tfidf_vectorizer.joblib')
+print('Model + Vectorizer loaded successfully')
+"
+
+      - name: Test inference
+        run: |
+          python -c "
+import joblib
+model = joblib.load('app/models/logreg_baseline.joblib')
+vectorizer = joblib.load('app/models/tfidf_vectorizer.joblib')
+X = vectorizer.transform(['This is amazing'])
+pred = model.predict(X)
+print('Prediction successful:', pred)
+"
