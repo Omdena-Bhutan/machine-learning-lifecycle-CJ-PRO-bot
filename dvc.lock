@@ -1,0 +1,22 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python src/data_loader.py
+    deps:
+    - path: data/raw/reviews.csv
+      hash: md5
+      md5: 7c754345ec12b5965af8a43764c49406
+      size: 66187310
+    - path: src/data_loader.py
+      hash: md5
+      md5: 99adebd681891c226a5671a5d6e96202
+      size: 2892
+    outs:
+    - path: data/processed/test.pkl
+      hash: md5
+      md5: ae930d53ae6553fd1d99df6fd0ec1070
+      size: 32475227
+    - path: data/processed/train.pkl
+      hash: md5
+      md5: a3246ed6a1054ce52eee2124d1d4ad3f
+      size: 33392071

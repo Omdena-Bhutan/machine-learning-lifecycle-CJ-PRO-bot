@@ -1,0 +1,23 @@
+# Core
+python-dotenv>=1.0.0
+
+# Data handling
+pandas>=2.0.0
+numpy>=1.23.0
+
+# Visualization (EDA)
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Machine Learning
+scikit-learn>=1.3.0
+joblib>=1.3.0
+
+# DVC (data versioning & pipeline)
+dvc>=3.0.0
+dvc-gdrive>=3.0.0
+# OR dvc[s3], dvc[azure], etc. depending on remote (your sir likely set this)
+
+# Jupyter / notebooks
+jupyterlab>=4.0.0
+ipykernel>=6.25.0
