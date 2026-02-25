@@ -1,5 +1,0 @@
-outs:
-- md5: 3a8276217bbbaca539cdaaac5b7a8874
-  size: 400731
-  hash: md5
-  path: linearsvc_baseline.joblib
